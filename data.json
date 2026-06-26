@@ -1,0 +1,84 @@
+{
+    "project_meta": {
+        "name": "Proyecto KRONOS",
+        "description": "Ecosistema robótico modular autónomo. Desarrollado por componentes independientes para optimizar fases de testeo electrónico y diseño mecánico.",
+        "global_progress": 42
+    },
+    "subprojects": [
+        {
+            "id": "sub-1",
+            "name": "Brazo Articulado (3 DOF)",
+            "status": "Diseño CAD",
+            "status_color": "bg-blue-500",
+            "progress": 65,
+            "timeline": [
+                "Investigación de torques",
+                "Modelado en SolidWorks",
+                "Impresión 3D de eslabones"
+            ],
+            "description": "Módulo de manipulación principal. Utiliza servomotores de alto torque y requiere cálculos cinemáticos inversos."
+        },
+        {
+            "id": "sub-2",
+            "name": "Chasis y Tracción",
+            "status": "Prototipo Físico",
+            "status_color": "bg-yellow-500",
+            "progress": 80,
+            "timeline": [
+                "Corte láser de acrílico",
+                "Montaje de motores DC",
+                "Pruebas de odometría"
+            ],
+            "description": "Plataforma móvil con tracción diferencial y suspensión pasiva."
+        }
+    ],
+    "pdf_vault": [
+        {
+            "title": "Datasheet - Servomotor MG996R",
+            "lang": "Inglés",
+            "category": "Datasheet",
+            "file": "assets/pdfs/mg996r.pdf"
+        },
+        {
+            "title": "Analyse der kinematischen Kette (Robotics)",
+            "lang": "Alemán",
+            "category": "Academic Paper",
+            "file": "assets/pdfs/kinematik_de.pdf"
+        }
+    ],
+    "media_center": [
+        {
+            "title": "Boceto inicial - Distribución de carga",
+            "type": "Mano alzada",
+            "url": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80"
+        },
+        {
+            "title": "Render de la estructura en CAD",
+            "type": "Computadora",
+            "url": "https://images.unsplash.com/photo-1537462715879-360eeb61a0bc?auto=format&fit=crop&w=600&q=80"
+        }
+    ],
+    "brainstorming": {
+        "scratchpad": [
+            "¿Implementar ROS2 o mantener el firmware nativo en C++?",
+            "Comprar sensores ultrasónicos extra para los puntos ciegos traseros."
+        ],
+        "backlog": [
+            {
+                "idea": "Visión computacional con una Raspberry Pi Cam",
+                "priority": "Alta"
+            },
+            {
+                "idea": "Baterías LiPo con sistema de balanceo integrado",
+                "priority": "Media"
+            }
+        ]
+    },
+    "code_snippets": [
+        {
+            "title": "Prueba de Cinemática Inversa básica",
+            "lang": "python",
+            "code": "import math\ndef calcular_angulos(x, y):\n    # TODO: Implementar ley de cosenos para 2 DOF\n    hipotenusa = math.sqrt(x**2 + y**2)\n    print(f'Moviendo actuadores a distancia: {hipotenusa}')\n    return True"
+        }
+    ]
+}
