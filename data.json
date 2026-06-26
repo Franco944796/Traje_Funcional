@@ -1,84 +1,95 @@
 {
     "project_meta": {
-        "name": "Proyecto KRONOS",
-        "description": "Ecosistema robótico modular autónomo. Desarrollado por componentes independientes para optimizar fases de testeo electrónico y diseño mecánico.",
-        "global_progress": 42
+        "name": "Proyecto ",
+        "description": "Ecosistema robótico modular. Desarrollado por componentes independientes para optimizar fases de testeo electrónico y diseño mecánico.",
+        "global_progress": 0.002
     },
     "subprojects": [
         {
             "id": "sub-1",
-            "name": "Brazo Articulado (3 DOF)",
+            "name": "Brazo Articulado",
             "status": "Diseño CAD",
             "status_color": "bg-blue-500",
-            "progress": 65,
+            "progress": 0,
             "timeline": [
-                "Investigación de torques",
-                "Modelado en SolidWorks",
-                "Impresión 3D de eslabones"
+                {
+                    "text": "Investigación de Materiales",
+                    "completed": false
+                },
+                {
+                    "text": "Modelado en SolidWorks",
+                    "completed": false
+                }
             ],
             "description": "Módulo de manipulación principal. Utiliza servomotores de alto torque y requiere cálculos cinemáticos inversos."
         },
         {
             "id": "sub-2",
-            "name": "Chasis y Tracción",
+            "name": "Nombre del próximo subproyecto",
             "status": "Prototipo Físico",
-            "status_color": "bg-yellow-500",
-            "progress": 80,
+            "status_color": "bg-blue-500",
+            "progress": 0,
             "timeline": [
-                "Corte láser de acrílico",
-                "Montaje de motores DC",
-                "Pruebas de odometría"
+                {
+                    "text": "Investigación de Materiales",
+                    "completed": false
+                }
             ],
-            "description": "Plataforma móvil con tracción diferencial y suspensión pasiva."
+            "description": "Descripción del subproyecto."
         }
     ],
     "pdf_vault": [
         {
-            "title": "Datasheet - Servomotor MG996R",
-            "lang": "Inglés",
-            "category": "Datasheet",
-            "file": "assets/pdfs/mg996r.pdf"
+            "title": "brazo robotico-1",
+            "lang": "Español",
+            "category": "Académico",
+            "file": "assets/pdfs/BrazoRobotico.pdf"
         },
         {
-            "title": "Analyse der kinematischen Kette (Robotics)",
-            "lang": "Alemán",
-            "category": "Academic Paper",
-            "file": "assets/pdfs/kinematik_de.pdf"
+            "title": "nombre pdf 2",
+            "lang": "Español",
+            "category": "Académico",
+            "file": "assets/pdfs/"
         }
     ],
     "media_center": [
         {
-            "title": "Boceto inicial - Distribución de carga",
+            "title": "Boceto del brazo articulado",
             "type": "Mano alzada",
             "url": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80"
         },
         {
-            "title": "Render de la estructura en CAD",
-            "type": "Computadora",
+            "title": "Título de la imagen 2",
+            "type": "Computadora 3D",
             "url": "https://images.unsplash.com/photo-1537462715879-360eeb61a0bc?auto=format&fit=crop&w=600&q=80"
         }
     ],
     "brainstorming": {
         "scratchpad": [
-            "¿Implementar ROS2 o mantener el firmware nativo en C++?",
-            "Comprar sensores ultrasónicos extra para los puntos ciegos traseros."
+            "Analizar la estructura del brazo humano con punto de vista médico, documentar información, bocetos y/o planos.",
+            "Analizar la estructura del brazo humano con punto de vista mecánico, documentar información, bocetos y/o planos."
         ],
         "backlog": [
             {
-                "idea": "Visión computacional con una Raspberry Pi Cam",
+                "idea": "escribir idea 1",
                 "priority": "Alta"
             },
             {
-                "idea": "Baterías LiPo con sistema de balanceo integrado",
+                "idea": "escribir idea 2",
                 "priority": "Media"
             }
         ]
     },
     "code_snippets": [
         {
-            "title": "Prueba de Cinemática Inversa básica",
+            "title": "Controlador PWM para Servomotores (Base)",
+            "lang": "cpp",
+            "file": "assets/code/pwm_control.ino"
+        },
+        {
+            "title": "Script de Cinemática Inversa y Telemetría",
             "lang": "python",
-            "code": "import math\ndef calcular_angulos(x, y):\n    # TODO: Implementar ley de cosenos para 2 DOF\n    hipotenusa = math.sqrt(x**2 + y**2)\n    print(f'Moviendo actuadores a distancia: {hipotenusa}')\n    return True"
+            "file": "assets/code/kinematics.py"
         }
     ]
 }

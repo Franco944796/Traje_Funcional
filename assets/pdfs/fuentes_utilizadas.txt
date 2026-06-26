@@ -1,0 +1,33 @@
+En este archivo se encuentran las fuentes consultadas durante la recopilacion de información y elaboracion de planos:
+
+1. Google Scholar (Buscador general que indexa literatura académica)
+
+
+
+
+
+
+
+
+
+Fuentes a utilizar de la clear web (aun no consultadas):
+- Scopus (Base de datos multidisciplinar)
+- Web of Science (Base de datos multidisciplinar)
+- JSTOR (Base de datos multidisciplinar)
+- ProQuest (Base de datos multidisciplinar)
+- Recursoscientificos
+
+- PubMed (Repositorio y bases específicas)
+- Scielo (Repositorio y bases específicas)
+- Dialnet (Repositorio y bases específicas)
+- Redalyc (Repositorio y bases específicas)
+- Dadun (Repositorio y bases específicas)
+
+- SpringerLink (Biblioteca Universitaria)
+- Sage (Biblioteca Universitaria)
+- Taylor & Francis (Biblioteca Universitaria)
+
+- Github
+- GitLab
+- Python Robotics
+- ROS
