@@ -41,27 +41,21 @@
     "pdf_vault": [
         {
             "title": "brazo robotico-1",
-            "lang": "Español",
-            "category": "Académico",
             "file": "assets/pdfs/BrazoRobotico.pdf",
-            "anio": "2016",
+            "anio": "2026",
             "tema": "Mecánica"
         },
         {
-            "title": "Atlas Anatomia Humana",
-            "lang": "Español",
-            "category": "Académico",
-            "file": "assets/pdfs/Atlas-de-anatomia-humana.pdf",
-            "anio": "2002",
-            "tema": "Anatomía"
+            "title": "Bateria de estado solido 1",
+            "file": "assets/pdfs/Bateria-Estado-Solido-1.pdf",
+            "anio": "2026",
+            "tema": "Batería de estado sólido"
         },
         {
-            "title": "Bateria de estado solido 1",
-            "lang": "Español",
-            "category": "Académico",
-            "file": "assets/pdfs/Bateria-Estado-Solido-1.pdf",
-            "anio": "2021",
-            "tema": "Batería de estado sólido"
+            "title": "Atlas Anatomia Humana",
+            "file": "https://el-link-que-elijas-para-el-atlas.com",
+            "anio": "2025",
+            "tema": "Anatomía"
         }
     ],
     "media_center": [
