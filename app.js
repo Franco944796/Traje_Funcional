@@ -39,7 +39,7 @@ function render_hub() {
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-lg">
                 <h3 class="text-sm font-bold text-slate-400 mb-4">> Árbol de Subproyectos</h3>
                 <ul class="text-xs space-y-2 text-slate-300">
@@ -53,7 +53,7 @@ function render_hub() {
 
 function render_subprojects() {
     return `
-        <h2 class="text-xl font-bold text-emerald-400">// COMPONENTES INDEPENDIENTES</h2>
+        <h2 class="text-xl font-bold text-emerald-400 mb-4">// COMPONENTES INDEPENDIENTES</h2>
         <div class="grid grid-cols-1 gap-6">
             ${vaultData.subprojects.map(sub => `
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-lg space-y-4">
@@ -81,88 +81,45 @@ function render_subprojects() {
     `;
 }
 
-// =========================================================================
-// CONTROL DE FILTROS PARA LA BÓVEDA DE DOCUMENTOS
-// =========================================================================
-let pdfFilters = { anio: 'todos', tema: 'todos' };
-
-// Función global que captura el cambio de los selectores y re-renderiza la vista
-function filterPdf(type, value) {
-    pdfFilters[type] = value;
-    const container = document.getElementById('content-area');
-    container.innerHTML = render_pdf();
-}
-
-// =========================================================================
-// FUNCIÓN RENDER_PDF MODULAR Y DINÁMICA
-// =========================================================================
 function render_pdf() {
-    // 1. Extracción automática de Filtros Únicos desde el JSON (Filtros Inteligentes)
-    const aniosUnicos = [...new Set(vaultData.pdf_vault.map(pdf => pdf.anio).filter(Boolean))].sort();
-    const temasUnicos = [...new Set(vaultData.pdf_vault.map(pdf => pdf.tema).filter(Boolean))].sort();
-
-    // 2. Aplicación del filtrado cruzado (Año Y Tema)
-    const filteredPdfs = vaultData.pdf_vault.filter(pdf => {
-        const matchAnio = pdfFilters.anio === 'todos' || pdf.anio === pdfFilters.anio;
-        const matchTema = pdfFilters.tema === 'todos' || pdf.tema === pdfFilters.tema;
-        return matchAnio && matchTema;
-    });
+    // Extrae automáticamente las opciones únicas de 'tema' y 'anio' desde tu data.json
+    const temas = [...new Set(vaultData.pdf_vault.map(pdf => pdf.tema).filter(Boolean))];
+    const anios = [...new Set(vaultData.pdf_vault.map(pdf => pdf.anio).filter(Boolean))];
 
     return `
-        <!-- Encabezado y Selectores de Filtro con Tailwind -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <h2 class="text-xl font-bold text-emerald-400">// BÓVEDA DE DOCUMENTACIÓN (MULTILINGÜE)</h2>
+        <div class="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 class="text-xl font-bold text-emerald-400">// BÓVEDA DE DOCUMENTACIÓN</h2>
 
-            <div class="flex flex-wrap gap-4 text-xs font-mono">
-                <!-- Selector: Año -->
-                <div class="flex flex-col gap-1">
-                    <label class="text-slate-500 font-bold">> FILTRAR_AÑO</label>
-                    <select onchange="filterPdf('anio', this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 rounded px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer">
-                        <option value="todos" ${pdfFilters.anio === 'todos' ? 'selected' : ''}>[ VER TODOS ]</option>
-                        ${aniosUnicos.map(anio => `<option value="${anio}" ${pdfFilters.anio === anio ? 'selected' : ''}>${anio}</option>`).join('')}
-                    </select>
-                </div>
+            <div class="flex gap-2">
+                <select id="filter-tema" onchange="applyPdfFilters()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded p-2 focus:border-emerald-500 focus:outline-none cursor-pointer">
+                    <option value="">Todos los temas</option>
+                    ${temas.map(t => `<option value="${t}">${t}</option>`).join('')}
+                </select>
 
-                <!-- Selector: Tema -->
-                <div class="flex flex-col gap-1">
-                    <label class="text-slate-500 font-bold">> FILTRAR_TEMA</label>
-                    <select onchange="filterPdf('tema', this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 rounded px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer">
-                        <option value="todos" ${pdfFilters.tema === 'todos' ? 'selected' : ''}>[ VER TODOS ]</option>
-                        ${temasUnicos.map(tema => `<option value="${tema}" ${pdfFilters.tema === tema ? 'selected' : ''}>${tema}</option>`).join('')}
-                    </select>
-                </div>
+                <select id="filter-anio" onchange="applyPdfFilters()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded p-2 focus:border-emerald-500 focus:outline-none cursor-pointer">
+                    <option value="">Todos los años</option>
+                    ${anios.map(a => `<option value="${a}">${a}</option>`).join('')}
+                </select>
             </div>
         </div>
 
-        <!-- Tabla de Documentos -->
         <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg">
             <table class="w-full text-left text-sm text-slate-300">
                 <thead class="text-xs uppercase bg-slate-800 text-slate-400 border-b border-slate-700">
                     <tr>
                         <th class="p-4">Documento Técnico</th>
-                        <th class="p-4">Idioma</th>
-                        <th class="p-4">Categoría</th>
+                        <th class="p-4">Año</th>
+                        <th class="p-4">Tema</th>
                         <th class="p-4">Acción</th>
                     </tr>
                 </thead>
-                <tbody>
-                    ${filteredPdfs.length === 0 ? `
-                        <!-- Estado vacío si ningún PDF coincide -->
-                        <tr>
-                            <td colspan="4" class="p-8 text-center text-slate-500 font-mono text-xs">
-                                // REGISTRO VACÍO: No se encontraron documentos con los filtros seleccionados.
-                            </td>
-                        </tr>
-                    ` : filteredPdfs.map(pdf => `
-                        <tr class="border-b border-slate-800 hover:bg-slate-800/30 transition">
-                            <td class="p-4">
-                                <div class="font-medium text-slate-200">${pdf.title}</div>
-                                <!-- Texto pequeño y gris con los metadatos solicitado -->
-                                <div class="text-[11px] text-slate-500 font-mono mt-0.5">AÑO: ${pdf.anio || 'N/A'} | TEMA: ${pdf.tema || 'General'}</div>
-                            </td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.lang}</span></td>
-                            <td class="p-4 text-slate-400">${pdf.category}</td>
-                            <td class="p-4"><a href="${pdf.file}" target="_blank" class="text-emerald-400 hover:underline font-bold">Abrir PDF</a></td>
+                <tbody id="pdf-tbody">
+                    ${vaultData.pdf_vault.map(pdf => `
+                        <tr class="border-b border-slate-800 hover:bg-slate-800/30">
+                            <td class="p-4 font-medium">${pdf.title}</td>
+                            <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.anio}</span></td>
+                            <td class="p-4 text-slate-400">${pdf.tema}</td>
+                            <td class="p-4"><a href="${pdf.file}" target="_blank" class="text-emerald-400 hover:underline">Abrir PDF</a></td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -171,9 +128,35 @@ function render_pdf() {
     `;
 }
 
+// Función encargada de realizar el filtrado inmediato al cambiar una opción
+function applyPdfFilters() {
+    const temaSelected = document.getElementById('filter-tema').value;
+    const anioSelected = document.getElementById('filter-anio').value;
+
+    // Filtrar los datos cargados en base a la selección
+    const filtered = vaultData.pdf_vault.filter(pdf => {
+        const matchTema = temaSelected === "" || pdf.tema === temaSelected;
+        const matchAnio = anioSelected === "" || pdf.anio === anioSelected;
+        return matchTema && matchAnio;
+    });
+
+    // Inyectar reactivamente las filas correspondientes en la tabla
+    const tbody = document.getElementById('pdf-tbody');
+    if (tbody) {
+        tbody.innerHTML = filtered.map(pdf => `
+            <tr class="border-b border-slate-800 hover:bg-slate-800/30">
+                <td class="p-4 font-medium">${pdf.title}</td>
+                <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.anio}</span></td>
+                <td class="p-4 text-slate-400">${pdf.tema}</td>
+                <td class="p-4"><a href="${pdf.file}" target="_blank" class="text-emerald-400 hover:underline">Abrir PDF</a></td>
+            </tr>
+        `).join('');
+    }
+}
+
 function render_media() {
     return `
-        <h2 class="text-xl font-bold text-emerald-400">// PLANOS TÉCNICOS Y BOCETOS</h2>
+        <h2 class="text-xl font-bold text-emerald-400 mb-4">// PLANOS TÉCNICOS Y BOCETOS</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             ${vaultData.media_center.map(media => `
                 <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden group cursor-pointer" onclick="openLightbox('${media.url}')">
@@ -192,7 +175,7 @@ function render_media() {
 
 function render_brainstorm() {
     return `
-        <h2 class="text-xl font-bold text-emerald-400">// BITÁCORA DE IDEAS E IMPLEMENTACIONES</h2>
+        <h2 class="text-xl font-bold text-emerald-400 mb-4">// BITÁCORA DE IDEAS E IMPLEMENTACIONES</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-lg">
                 <h3 class="text-sm font-bold text-slate-400 mb-4">> Ideas </h3>
@@ -215,10 +198,9 @@ function render_brainstorm() {
     `;
 }
 
-// 3. Renderiza el contenedor y las tarjetas vacías (Esqueleto)
 function render_code() {
     return `
-        <h2 class="text-xl font-bold text-emerald-400">// CODE SNIPPETS (FIRMWARE / AUTOMATIZACIÓN)</h2>
+        <h2 class="text-xl font-bold text-emerald-400 mb-4">// CODE SNIPPETS (FIRMWARE / AUTOMATIZACIÓN)</h2>
         <div class="space-y-6">
             ${vaultData.code_snippets.map((block, index) => `
                 <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
@@ -233,7 +215,6 @@ function render_code() {
     `;
 }
 
-// 4. Función asíncrona que busca el contenido de cada archivo de código
 async function loadCodeFilesContents() {
     for (let i = 0; i < vaultData.code_snippets.length; i++) {
         const snippet = vaultData.code_snippets[i];
@@ -244,9 +225,6 @@ async function loadCodeFilesContents() {
             if (!response.ok) throw new Error();
 
             const rawCode = await response.text();
-
-            // Usamos textContent para que el navegador interprete el código como texto puro.
-            // Esto evita problemas de seguridad y renderiza los < y > de C++ o Python sin romperse.
             codeElement.textContent = rawCode;
 
         } catch (error) {
@@ -256,20 +234,17 @@ async function loadCodeFilesContents() {
     }
 }
 
-// 5. ENRUTADOR / INTERRUPTOR DE PESTAÑAS
 function switchTab(tabId) {
-    if (!vaultData) return; // Prevenir clics si el JSON no terminó de cargar
+    if (!vaultData) return;
 
     const container = document.getElementById('content-area');
 
-    // Estilizar dinámicamente el botón activo en el Sidebar
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('bg-slate-800', 'text-emerald-400');
         btn.classList.add('hover:bg-slate-800', 'hover:text-slate-200');
     });
     event.currentTarget.classList.add('bg-slate-800', 'text-emerald-400');
 
-    // Selección de renderizado
     switch (tabId) {
         case 'hub': container.innerHTML = render_hub(); break;
         case 'subprojects': container.innerHTML = render_subprojects(); break;
@@ -277,13 +252,12 @@ function switchTab(tabId) {
         case 'media': container.innerHTML = render_media(); break;
         case 'brainstorm': container.innerHTML = render_brainstorm(); break;
         case 'code':
-            container.innerHTML = render_code(); // Dibuja la estructura
-            loadCodeFilesContents();             // Dispara la carga asíncrona de los archivos
+            container.innerHTML = render_code();
+            loadCodeFilesContents();
             break;
     }
 }
 
-// 6. INTERACCIONES MODALES (Lightbox)
 function openLightbox(url) {
     const lb = document.getElementById('lightbox');
     const img = document.getElementById('lightbox-img');
