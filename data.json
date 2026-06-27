@@ -40,22 +40,28 @@
     ],
     "pdf_vault": [
         {
-            "title": "brazo robotico-1",
+            "title": "brazo robotico 6 GDL",
             "file": "assets/pdfs/BrazoRobotico.pdf",
-            "anio": "2016",
+            "año": "2016",
             "tema": "Mecánica"
         },
         {
-            "title": "Bateria de estado solido 1",
+            "title": "Revista de Investigación Multidisciplinaria",
             "file": "assets/pdfs/Bateria-Estado-Solido-1.pdf",
-            "anio": "2021",
+            "año": "2021",
             "tema": "Batería de estado sólido"
         },
         {
             "title": "Atlas Anatomia Humana",
             "file": "https://archivos1.cleu.edu.mx/LCC/8o/5.POLIGRAFIA/Atlas-de-anatomia.pdf",
-            "anio": "2025",
+            "año": "2002",
             "tema": "Anatomía"
+        },
+        {
+            "title": "Tesis de maestría en Universidad de Antioquia",
+            "file": "https://www.elsevier.com/books/atlas-de-anatomia-humana/9788491130910",
+            "año": "2022",
+            "tema": "Batería de estado sólido"
         }
     ],
     "media_center": [

@@ -82,9 +82,9 @@ function render_subprojects() {
 }
 
 function render_pdf() {
-    // Extrae automáticamente las opciones únicas de 'tema' y 'anio' desde tu data.json
+    // Extrae automáticamente las opciones únicas de 'tema' y 'año' desde tu data.json
     const temas = [...new Set(vaultData.pdf_vault.map(pdf => pdf.tema).filter(Boolean))];
-    const anios = [...new Set(vaultData.pdf_vault.map(pdf => pdf.anio).filter(Boolean))];
+    const años = [...new Set(vaultData.pdf_vault.map(pdf => pdf.año).filter(Boolean))];
 
     return `
         <div class="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
@@ -96,9 +96,9 @@ function render_pdf() {
                     ${temas.map(t => `<option value="${t}">${t}</option>`).join('')}
                 </select>
 
-                <select id="filter-anio" onchange="applyPdfFilters()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded p-2 focus:border-emerald-500 focus:outline-none cursor-pointer">
+                <select id="filter-año" onchange="applyPdfFilters()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded p-2 focus:border-emerald-500 focus:outline-none cursor-pointer">
                     <option value="">Todos los años</option>
-                    ${anios.map(a => `<option value="${a}">${a}</option>`).join('')}
+                    ${años.map(a => `<option value="${a}">${a}</option>`).join('')}
                 </select>
             </div>
         </div>
@@ -117,7 +117,7 @@ function render_pdf() {
                     ${vaultData.pdf_vault.map(pdf => `
                         <tr class="border-b border-slate-800 hover:bg-slate-800/30">
                             <td class="p-4 font-medium">${pdf.title}</td>
-                            <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.anio}</span></td>
+                            <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.año}</span></td>
                             <td class="p-4 text-slate-400">${pdf.tema}</td>
                             <td class="p-4"><a href="${pdf.file}" target="_blank" class="text-emerald-400 hover:underline">Abrir PDF</a></td>
                         </tr>
@@ -131,13 +131,13 @@ function render_pdf() {
 // Función encargada de realizar el filtrado inmediato al cambiar una opción
 function applyPdfFilters() {
     const temaSelected = document.getElementById('filter-tema').value;
-    const anioSelected = document.getElementById('filter-anio').value;
+    const añoSelected = document.getElementById('filter-año').value;
 
     // Filtrar los datos cargados en base a la selección
     const filtered = vaultData.pdf_vault.filter(pdf => {
         const matchTema = temaSelected === "" || pdf.tema === temaSelected;
-        const matchAnio = anioSelected === "" || pdf.anio === anioSelected;
-        return matchTema && matchAnio;
+        const matchño = añoSelected === "" || pdf.año === añoSelected;
+        return matchTema && matchAño;
     });
 
     // Inyectar reactivamente las filas correspondientes en la tabla
@@ -146,7 +146,7 @@ function applyPdfFilters() {
         tbody.innerHTML = filtered.map(pdf => `
             <tr class="border-b border-slate-800 hover:bg-slate-800/30">
                 <td class="p-4 font-medium">${pdf.title}</td>
-                <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.anio}</span></td>
+                <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.año}</span></td>
                 <td class="p-4 text-slate-400">${pdf.tema}</td>
                 <td class="p-4"><a href="${pdf.file}" target="_blank" class="text-emerald-400 hover:underline">Abrir PDF</a></td>
             </tr>
