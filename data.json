@@ -43,13 +43,25 @@
             "title": "brazo robotico-1",
             "lang": "Español",
             "category": "Académico",
-            "file": "assets/pdfs/BrazoRobotico.pdf"
+            "file": "assets/pdfs/BrazoRobotico.pdf",
+            "anio": "2016",
+            "tema": "Mecánica"
         },
         {
-            "title": "nombre pdf 2",
+            "title": "Atlas Anatomia Humana",
             "lang": "Español",
             "category": "Académico",
-            "file": "assets/pdfs/"
+            "file": "assets/pdfs/Atlas-de-anatomia-humana.pdf",
+            "anio": "2002",
+            "tema": "Anatomía"
+        },
+        {
+            "title": "Bateria de estado solido 1",
+            "lang": "Español",
+            "category": "Académico",
+            "file": "assets/pdfs/Bateria-Estado-Solido-1.pdf",
+            "anio": "2021",
+            "tema": "Batería de estado sólido"
         }
     ],
     "media_center": [

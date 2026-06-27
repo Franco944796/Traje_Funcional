@@ -81,9 +81,60 @@ function render_subprojects() {
     `;
 }
 
+// =========================================================================
+// CONTROL DE FILTROS PARA LA BÓVEDA DE DOCUMENTOS
+// =========================================================================
+let pdfFilters = { anio: 'todos', tema: 'todos' };
+
+// Función global que captura el cambio de los selectores y re-renderiza la vista
+function filterPdf(type, value) {
+    pdfFilters[type] = value;
+    const container = document.getElementById('content-area');
+    container.innerHTML = render_pdf();
+}
+
+// =========================================================================
+// FUNCIÓN RENDER_PDF MODULAR Y DINÁMICA
+// =========================================================================
 function render_pdf() {
+    // 1. Extracción automática de Filtros Únicos desde el JSON (Filtros Inteligentes)
+    const aniosUnicos = [...new Set(vaultData.pdf_vault.map(pdf => pdf.anio).filter(Boolean))].sort();
+    const temasUnicos = [...new Set(vaultData.pdf_vault.map(pdf => pdf.tema).filter(Boolean))].sort();
+
+    // 2. Aplicación del filtrado cruzado (Año Y Tema)
+    const filteredPdfs = vaultData.pdf_vault.filter(pdf => {
+        const matchAnio = pdfFilters.anio === 'todos' || pdf.anio === pdfFilters.anio;
+        const matchTema = pdfFilters.tema === 'todos' || pdf.tema === pdfFilters.tema;
+        return matchAnio && matchTema;
+    });
+
     return `
-        <h2 class="text-xl font-bold text-emerald-400">// BÓVEDA DE DOCUMENTACIÓN (MULTILINGÜE)</h2>
+        <!-- Encabezado y Selectores de Filtro con Tailwind -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <h2 class="text-xl font-bold text-emerald-400">// BÓVEDA DE DOCUMENTACIÓN (MULTILINGÜE)</h2>
+
+            <div class="flex flex-wrap gap-4 text-xs font-mono">
+                <!-- Selector: Año -->
+                <div class="flex flex-col gap-1">
+                    <label class="text-slate-500 font-bold">> FILTRAR_AÑO</label>
+                    <select onchange="filterPdf('anio', this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 rounded px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                        <option value="todos" ${pdfFilters.anio === 'todos' ? 'selected' : ''}>[ VER TODOS ]</option>
+                        ${aniosUnicos.map(anio => `<option value="${anio}" ${pdfFilters.anio === anio ? 'selected' : ''}>${anio}</option>`).join('')}
+                    </select>
+                </div>
+
+                <!-- Selector: Tema -->
+                <div class="flex flex-col gap-1">
+                    <label class="text-slate-500 font-bold">> FILTRAR_TEMA</label>
+                    <select onchange="filterPdf('tema', this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 rounded px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                        <option value="todos" ${pdfFilters.tema === 'todos' ? 'selected' : ''}>[ VER TODOS ]</option>
+                        ${temasUnicos.map(tema => `<option value="${tema}" ${pdfFilters.tema === tema ? 'selected' : ''}>${tema}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Documentos -->
         <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg">
             <table class="w-full text-left text-sm text-slate-300">
                 <thead class="text-xs uppercase bg-slate-800 text-slate-400 border-b border-slate-700">
@@ -95,12 +146,23 @@ function render_pdf() {
                     </tr>
                 </thead>
                 <tbody>
-                    ${vaultData.pdf_vault.map(pdf => `
-                        <tr class="border-b border-slate-800 hover:bg-slate-800/30">
-                            <td class="p-4 font-medium">${pdf.title}</td>
+                    ${filteredPdfs.length === 0 ? `
+                        <!-- Estado vacío si ningún PDF coincide -->
+                        <tr>
+                            <td colspan="4" class="p-8 text-center text-slate-500 font-mono text-xs">
+                                // REGISTRO VACÍO: No se encontraron documentos con los filtros seleccionados.
+                            </td>
+                        </tr>
+                    ` : filteredPdfs.map(pdf => `
+                        <tr class="border-b border-slate-800 hover:bg-slate-800/30 transition">
+                            <td class="p-4">
+                                <div class="font-medium text-slate-200">${pdf.title}</div>
+                                <!-- Texto pequeño y gris con los metadatos solicitado -->
+                                <div class="text-[11px] text-slate-500 font-mono mt-0.5">AÑO: ${pdf.anio || 'N/A'} | TEMA: ${pdf.tema || 'General'}</div>
+                            </td>
                             <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.lang}</span></td>
                             <td class="p-4 text-slate-400">${pdf.category}</td>
-                            <td class="p-4"><a href="${pdf.file}" target="_blank" class="text-emerald-400 hover:underline">Abrir PDF</a></td>
+                            <td class="p-4"><a href="${pdf.file}" target="_blank" class="text-emerald-400 hover:underline font-bold">Abrir PDF</a></td>
                         </tr>
                     `).join('')}
                 </tbody>
