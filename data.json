@@ -59,9 +59,15 @@
         },
         {
             "title": "Tesis de maestría en Universidad de Antioquia",
-            "file": "https://www.elsevier.com/books/atlas-de-anatomia-humana/9788491130910",
+            "file": "assets/pdfs/Bateria-Estado-Solido-2.pdf",
             "año": "2022",
             "tema": "Batería de estado sólido"
+        },
+        {
+            "title": "Aplicación de la teoría de robots manipuladores a la biomecánica del brazo humano",
+            "file": "assets/pdfs/BrazoRobotico2.pdf",
+            "año": "2007",
+            "tema": "Mecánica"
         }
     ],
     "media_center": [
