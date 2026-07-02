@@ -71,8 +71,14 @@
         },
         {
             "title": "Levitación diamagnética pasiva",
-            "file": "assets/pdfs/levitacion_magnetica.pdf",
+            "file": "assets/pdfs/levitacion_diamagnetica.pdf",
             "año": "2024",
+            "tema": "Física/Mecánica"
+        },
+        {
+            "title": "Levitación magnética (repulsión electromagnética)",
+            "file": "assets/pdfs/levitacion_magnetica.pdf",
+            "año": "2018",
             "tema": "Física/Mecánica"
         }
     ],

@@ -184,7 +184,7 @@ function render_brainstorm() {
                 </ul>
             </div>
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-lg">
-                <h3 class="text-sm font-bold text-slate-400 mb-4">> Implementando </h3>
+                <h3 class="text-sm font-bold text-slate-400 mb-4">> Implementado </h3>
                 <ul class="space-y-2 text-xs">
                     ${vaultData.brainstorming.backlog.map(item => `
                         <li class="flex justify-between p-2 bg-slate-950 border border-slate-800 rounded">
