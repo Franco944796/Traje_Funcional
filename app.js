@@ -156,7 +156,7 @@ function applyPdfFilters() {
 
 function render_media() {
     return `
-        <h2 class="text-xl font-bold text-emerald-400 mb-4">// PLANOS TÉCNICOS Y BOCETOS</h2>
+        <h2 class="text-xl font-bold text-emerald-400 mb-4">// PLANOS TÉCNICOS, BOCETOS E IMÁGENES</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             ${vaultData.media_center.map(media => `
                 <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden group cursor-pointer" onclick="openLightbox('${media.url}')">

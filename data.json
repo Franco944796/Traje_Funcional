@@ -68,24 +68,51 @@
             "file": "assets/pdfs/BrazoRobotico2.pdf",
             "año": "2007",
             "tema": "Mecánica"
+        },
+        {
+            "title": "Levitación diamagnética pasiva",
+            "file": "assets/pdfs/levitacion_magnetica.pdf",
+            "año": "2024",
+            "tema": "Física/Mecánica"
         }
     ],
     "media_center": [
         {
-            "title": "Boceto del brazo articulado",
-            "type": "Mano alzada",
-            "url": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80"
+            "title": "Huesos del Carpo",
+            "type": "Anatomía",
+            "url": "assets/imgs/carpo_mano.jpg"
         },
         {
-            "title": "Título de la imagen 2",
-            "type": "Computadora 3D",
-            "url": "https://images.unsplash.com/photo-1537462715879-360eeb61a0bc?auto=format&fit=crop&w=600&q=80"
+            "title": "Movimientos del Carpo 1/2",
+            "type": "Anatomía",
+            "url": "assets/imgs/mov1_carpo.jpg"
+        },
+        {
+            "title": "Movimientos del Carpo 2/2",
+            "type": "Anatomía",
+            "url": "assets/imgs/mov2_carpo.jpg"
+        },
+        {
+            "title": "Mano izquierda - Vista Superior",
+            "type": "Anatomía",
+            "url": "assets/imgs/mano_izq.jpg"
+        },
+        {
+            "title": "Mano derecha - Vista Superior",
+            "type": "Anatomía",
+            "url": "assets/imgs/mano_der.jpg"
+        },
+        {
+            "title": "Figura humana - Vista de frente",
+            "type": "Anatomía",
+            "url": "assets/imgs/figura_humana.jpg"
         }
     ],
     "brainstorming": {
         "scratchpad": [
             "Analizar la estructura del brazo humano con punto de vista médico, documentar información, bocetos y/o planos.",
-            "Analizar la estructura del brazo humano con punto de vista mecánico, documentar información, bocetos y/o planos."
+            "Analizar la estructura del brazo humano con punto de vista mecánico, documentar información, bocetos y/o planos.",
+            "Subdivisiones de la armadura, que se componga de piezas chicas y modulares, haciendo el reemplazo y diseño más fácil. De esta forma si en el diseño final se quiere implementar que la armadura levite por si misma, lo que hacen las piezas independientes es reconocer el 'punto/s' identificador/es y acoplarse al cuerpo."
         ],
         "backlog": [
             {
