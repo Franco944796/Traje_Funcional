@@ -2,7 +2,7 @@
     "project_meta": {
         "name": "Proyecto ",
         "description": "Ecosistema robótico modular. Desarrollado por componentes independientes para optimizar fases de testeo electrónico y diseño mecánico.",
-        "global_progress": 0.002
+        "global_progress": 0.004
     },
     "subprojects": [
         {
@@ -127,8 +127,8 @@
     },
     "code_snippets": [
         {
-            "title": "Controlador PWM para Servomotores (Base)",
-            "lang": "cpp",
+            "title": "Visión artificial para identificación de contornos",
+            "lang": "python",
             "file": "assets/code/pwm_control.ino"
         },
         {
