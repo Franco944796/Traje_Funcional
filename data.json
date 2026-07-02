@@ -80,6 +80,12 @@
             "file": "assets/pdfs/levitacion_magnetica.pdf",
             "año": "2018",
             "tema": "Física/Mecánica"
+        },
+        {
+            "title": "prox",
+            "file": ".",
+            "año": ".",
+            "tema": "."
         }
     ],
     "media_center": [
