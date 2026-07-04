@@ -1,6 +1,4 @@
 """
-renderer.py
------------
 Funciones puras de dibujo. Nunca dibujan la imagen de la cámara, solo
 líneas/contornos sobre un canvas negro.
 """
@@ -10,7 +8,6 @@ import numpy as np
 
 
 def landmarks_to_pixels(landmark_list, width: int, height: int) -> np.ndarray:
-    """Convierte una lista de landmarks normalizados (0-1) a píxeles."""
     return np.array(
         [[int(lm.x * width), int(lm.y * height)] for lm in landmark_list],
         dtype=np.int32,
@@ -20,11 +17,7 @@ def landmarks_to_pixels(landmark_list, width: int, height: int) -> np.ndarray:
 def draw_connections(canvas: np.ndarray, landmark_list, connections,
                       width: int, height: int, color: tuple,
                       thickness: int = 1) -> None:
-    """
-    Dibuja únicamente las conexiones (líneas) indicadas entre landmarks.
-    Sirve tanto para el contorno facial como para el esqueleto de manos,
-    ya que ambos son simplemente listas de pares (start_idx, end_idx).
-    """
+
     pts = landmarks_to_pixels(landmark_list, width, height)
     n_points = len(pts)
     for start_idx, end_idx in connections:
@@ -35,19 +28,7 @@ def draw_connections(canvas: np.ndarray, landmark_list, connections,
 
 def compute_hand_silhouette_mask(frame_bgr: np.ndarray, landmark_list, width: int,
                                   height: int, padding: int = 25, iterations: int = 3):
-    """
-    Extrae la silueta EXACTA de la mano a nivel de píxel usando GrabCut,
-    sembrado con los landmarks reales como pistas de primer plano.
 
-    A diferencia de una forma geométrica fija (hull o skeleton), esto no
-    se "deforma" cuando la muñeca (carpo) rota o flexiona: cada frame
-    vuelve a analizar los píxeles reales de la imagen dentro de la región
-    de la mano, así que la silueta siempre sigue la forma real, sin
-    importar el ángulo de la muñeca o de los dedos.
-
-    Devuelve (mascara_binaria_recortada, offset_x, offset_y) o
-    (None, 0, 0) si no se puede procesar la región.
-    """
     pts = landmarks_to_pixels(landmark_list, width, height)
     x, y, w, h = cv2.boundingRect(pts)
     x0, y0 = max(0, x - padding), max(0, y - padding)
@@ -61,8 +42,6 @@ def compute_hand_silhouette_mask(frame_bgr: np.ndarray, landmark_list, width: in
 
     local_pts = pts - [x0, y0]
 
-    # Máscara inicial: todo "probable fondo", la zona de la mano
-    # "probable primer plano", y cada landmark como primer plano seguro.
     gc_mask = np.full(roi.shape[:2], cv2.GC_BGD, dtype=np.uint8)
     hull = cv2.convexHull(local_pts)
     cv2.fillConvexPoly(gc_mask, hull, cv2.GC_PR_FGD)
@@ -88,7 +67,6 @@ def draw_hand_silhouette(canvas: np.ndarray, frame_bgr: np.ndarray, landmark_lis
                           width: int, height: int, color: tuple, thickness: int = 2,
                           padding: int = 25, iterations: int = 3,
                           smoothing_epsilon_ratio: float = 0.003) -> None:
-    """Calcula y dibuja el contorno exacto de la mano sobre el canvas."""
     binary, x0, y0 = compute_hand_silhouette_mask(
         frame_bgr, landmark_list, width, height, padding, iterations
     )
@@ -115,16 +93,7 @@ def draw_segmentation_contour(canvas: np.ndarray, mask: np.ndarray,
                                width: int, height: int, color: tuple,
                                thickness: int = 2, threshold: float = 0.5,
                                smoothing_epsilon_ratio: float = 0.001) -> None:
-    """
-    Extrae y dibuja el contorno REAL de una máscara de segmentación
-    (silueta exacta a nivel de píxel), en vez de aproximar con pocos
-    puntos. Este es el método más preciso disponible para el cuerpo.
 
-    - threshold: a partir de qué probabilidad se considera "cuerpo".
-    - smoothing_epsilon_ratio: qué tanto se suaviza el contorno
-      (cv2.approxPolyDP). 0 = contorno crudo (más ruidoso, más fiel);
-      valores mayores = más suave pero puede perder detalle fino.
-    """
     if mask is None:
         return
 
@@ -132,7 +101,6 @@ def draw_segmentation_contour(canvas: np.ndarray, mask: np.ndarray,
     if binary.shape[:2] != (height, width):
         binary = cv2.resize(binary, (width, height), interpolation=cv2.INTER_NEAREST)
 
-    # Cierre morfológico leve para eliminar huecos/ruido sin perder forma.
     kernel = np.ones((5, 5), np.uint8)
     binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
 

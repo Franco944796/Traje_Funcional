@@ -82,7 +82,6 @@ function render_subprojects() {
 }
 
 function render_pdf() {
-    // Extrae automáticamente las opciones únicas de 'tema' y 'año' desde tu data.json
     const temas = [...new Set(vaultData.pdf_vault.map(pdf => pdf.tema).filter(Boolean))];
     const años = [...new Set(vaultData.pdf_vault.map(pdf => pdf.año).filter(Boolean))];
 
@@ -128,19 +127,16 @@ function render_pdf() {
     `;
 }
 
-// Función encargada de realizar el filtrado inmediato al cambiar una opción
 function applyPdfFilters() {
     const temaSelected = document.getElementById('filter-tema').value;
     const añoSelected = document.getElementById('filter-año').value;
 
-    // Filtrar los datos cargados en base a la selección
     const filtered = vaultData.pdf_vault.filter(pdf => {
         const matchTema = temaSelected === "" || pdf.tema === temaSelected;
-        const matchño = añoSelected === "" || pdf.año === añoSelected;
+        const matchAño = añoSelected === "" || pdf.año === añoSelected;
         return matchTema && matchAño;
     });
 
-    // Inyectar reactivamente las filas correspondientes en la tabla
     const tbody = document.getElementById('pdf-tbody');
     if (tbody) {
         tbody.innerHTML = filtered.map(pdf => `
@@ -198,38 +194,79 @@ function render_brainstorm() {
     `;
 }
 
+// OPTIMIZADO: Agregado botón de colapsado y máscara 'hidden' por defecto para evitar scrolls masivos
 function render_code() {
     return `
         <h2 class="text-xl font-bold text-emerald-400 mb-4">// CODE SNIPPETS (FIRMWARE / AUTOMATIZACIÓN)</h2>
         <div class="space-y-6">
-            ${vaultData.code_snippets.map((block, index) => `
+            ${vaultData.code_snippets.map((block, snippetIndex) => `
                 <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
-                    <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
-                        <span class="text-xs font-bold text-slate-300">${block.title}</span>
-                        <span class="text-[10px] uppercase bg-slate-950 text-emerald-400 font-bold px-2 py-0.5 rounded">${block.lang}</span>
+                    <div class="bg-slate-800/80 px-4 py-3 flex justify-between items-center border-b border-slate-700/50">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full inline-block animate-pulse"></span>
+                            <span class="text-xs font-bold text-slate-300 font-mono">${block.title}</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-[10px] uppercase bg-slate-950 text-emerald-400 font-bold px-2 py-0.5 rounded border border-slate-800 font-mono">
+                                ${block.lang}
+                            </span>
+                            <button onclick="toggleBlockFiles(${snippetIndex}, this)" class="text-[10px] font-mono text-slate-400 hover:text-emerald-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 transition duration-200 cursor-pointer">
+                                Mostrar archivos [+]
+                            </button>
+                        </div>
                     </div>
-                    <pre class="p-4 text-xs text-emerald-300 overflow-x-auto bg-slate-950 font-mono"><code id="code-block-${index}">// Leyendo registros del archivo remoto...</code></pre>
+
+                    <div id="files-container-${snippetIndex}" class="p-4 space-y-4 bg-slate-900 hidden border-t border-slate-800/40">
+                        ${block.files.map((file, fileIndex) => `
+                            <div onclick="openCodeModal(${snippetIndex}, ${fileIndex}, '${file.name}', '${block.lang}')"
+                                 class="border border-slate-800/80 rounded bg-slate-950/40 overflow-hidden cursor-pointer hover:border-emerald-500/40 hover:bg-slate-950/80 transition duration-300 group/file relative">
+
+                                <div class="bg-slate-900/60 px-4 py-2 flex justify-between items-center border-b border-slate-800/60">
+                                    <span class="text-xs font-mono text-slate-400 group-hover/file:text-emerald-400 transition">📄 ${file.name}</span>
+                                    <span class="text-[10px] text-slate-500 group-hover/file:text-emerald-400 font-mono transition">
+                                        [Click para expandir] 🖵
+                                    </span>
+                                </div>
+
+                                <div class="max-h-32 overflow-hidden relative pointer-events-none">
+                                    <pre class="p-4 text-xs bg-slate-950/90 !m-0 font-mono overflow-hidden"><code id="code-block-${snippetIndex}-${fileIndex}" class="language-${block.lang}">// Leyendo registros de ${file.name}...</code></pre>
+                                    <div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             `).join('')}
         </div>
     `;
 }
 
+// Carga asíncrona anidada (funciona en segundo plano aunque los contenedores estén en 'hidden')
 async function loadCodeFilesContents() {
-    for (let i = 0; i < vaultData.code_snippets.length; i++) {
-        const snippet = vaultData.code_snippets[i];
-        const codeElement = document.getElementById(`code-block-${i}`);
+    for (let s = 0; s < vaultData.code_snippets.length; s++) {
+        const block = vaultData.code_snippets[s];
 
-        try {
-            const response = await fetch(snippet.file);
-            if (!response.ok) throw new Error();
+        for (let f = 0; f < block.files.length; f++) {
+            const fileObj = block.files[f];
+            const codeElement = document.getElementById(`code-block-${s}-${f}`);
 
-            const rawCode = await response.text();
-            codeElement.textContent = rawCode;
+            if (!codeElement) continue;
 
-        } catch (error) {
-            codeElement.textContent = `// [ERROR]: No se pudo cargar el archivo desde: ${snippet.file}`;
-            codeElement.classList.add('text-rose-400');
+            try {
+                const response = await fetch(fileObj.path);
+                if (!response.ok) throw new Error();
+
+                const rawCode = await response.text();
+                codeElement.textContent = rawCode;
+
+                if (window.Prism) {
+                    Prism.highlightElement(codeElement);
+                }
+
+            } catch (error) {
+                codeElement.textContent = `// [ERROR]: No se pudo cargar el archivo desde: ${fileObj.path}`;
+                codeElement.classList.add('text-rose-400');
+            }
         }
     }
 }
@@ -243,7 +280,10 @@ function switchTab(tabId) {
         btn.classList.remove('bg-slate-800', 'text-emerald-400');
         btn.classList.add('hover:bg-slate-800', 'hover:text-slate-200');
     });
-    event.currentTarget.classList.add('bg-slate-800', 'text-emerald-400');
+
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('bg-slate-800', 'text-emerald-400');
+    }
 
     switch (tabId) {
         case 'hub': container.innerHTML = render_hub(); break;
@@ -263,4 +303,106 @@ function openLightbox(url) {
     const img = document.getElementById('lightbox-img');
     img.src = url;
     lb.classList.remove('hidden');
+}
+
+
+// ==========================================
+// NUEVA LOGICA: INTERRUPTOR DE ACORDEÓN
+// ==========================================
+
+function toggleBlockFiles(index, button) {
+    const container = document.getElementById(`files-container-${index}`);
+    if (!container) return;
+
+    if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        button.innerHTML = 'Ocultar archivos [-]';
+        button.classList.add('text-emerald-400', 'border-emerald-500/30');
+    } else {
+        container.classList.add('hidden');
+        button.innerHTML = 'Mostrar archivos [+]';
+        button.classList.remove('text-emerald-400', 'border-emerald-500/30');
+    }
+}
+
+
+// ==========================================
+// INTERACTIVIDAD DEL WORKSPACE MODAL
+// ==========================================
+
+function openCodeModal(snippetIndex, fileIndex, fileName, lang) {
+    const sourceCode = document.getElementById(`code-block-${snippetIndex}-${fileIndex}`);
+    if (!sourceCode) return;
+
+    const rawCodeText = sourceCode.textContent;
+
+    let modal = document.getElementById('code-modal-overlay');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'code-modal-overlay';
+        document.body.appendChild(modal);
+    }
+
+    modal.className = "fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8 animate-fade-in";
+
+    modal.innerHTML = `
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-6xl h-[85vh] rounded-xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="bg-slate-800/90 px-6 py-4 flex justify-between items-center border-b border-slate-700/50">
+                <div class="flex items-center space-x-3">
+                    <span class="w-3 h-3 bg-rose-500 rounded-full"></span>
+                    <span class="w-3 h-3 bg-amber-500 rounded-full"></span>
+                    <span class="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                    <span class="text-sm font-bold text-slate-200 font-mono ml-2">${fileName}</span>
+                    <span class="text-[10px] uppercase bg-slate-950 text-emerald-400 font-mono font-bold px-2 py-0.5 rounded border border-slate-800">${lang}</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="copyModalCode(this)" class="text-xs font-mono text-slate-300 hover:text-emerald-400 bg-slate-950 px-3 py-1.5 rounded border border-slate-800 transition duration-200">
+                        Copiar Código
+                    </button>
+                    <button onclick="closeCodeModal()" class="text-xs font-mono text-slate-400 hover:text-rose-400 bg-slate-950 px-3 py-1.5 rounded border border-slate-800 transition duration-200">
+                        Cerrar [ESC]
+                    </button>
+                </div>
+            </div>
+
+            <pre class="flex-1 p-6 overflow-auto font-mono text-xs md:text-sm bg-slate-950/90 !m-0 select-text"><code id="modal-code-block" class="language-${lang}"></code></pre>
+        </div>
+    `;
+
+    const modalCodeContainer = document.getElementById('modal-code-block');
+    modalCodeContainer.textContent = rawCodeText;
+
+    if (window.Prism) {
+        Prism.highlightElement(modalCodeContainer);
+    }
+
+    document.body.classList.add('overflow-hidden');
+    document.addEventListener('keydown', handleEscapeKeyPress);
+}
+
+function closeCodeModal() {
+    const modal = document.getElementById('code-modal-overlay');
+    if (modal) modal.remove();
+    document.body.classList.remove('overflow-hidden');
+    document.removeEventListener('keydown', handleEscapeKeyPress);
+}
+
+function handleEscapeKeyPress(e) {
+    if (e.key === 'Escape') closeCodeModal();
+}
+
+function copyModalCode(buttonElement) {
+    const modalCode = document.getElementById('modal-code-block');
+    if (modalCode) {
+        navigator.clipboard.writeText(modalCode.innerText).then(() => {
+            const originalText = buttonElement.innerText;
+            buttonElement.innerText = "¡Copiado!";
+            buttonElement.classList.add("text-emerald-400", "border-emerald-500/30");
+
+            setTimeout(() => {
+                buttonElement.innerText = originalText;
+                buttonElement.classList.remove("text-emerald-400", "border-emerald-500/30");
+            }, 2000);
+        });
+    }
 }

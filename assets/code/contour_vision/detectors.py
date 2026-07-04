@@ -1,13 +1,11 @@
 """
-detectors.py
-------------
 Cada detector encapsula un modelo de MediaPipe (API Tasks) y expone una
 interfaz de detección orientada a contornos precisos:
 
 - FaceContourDetector: contorno facial (y malla completa opcional).
 - HandContourDetector: esqueleto anatómico real de la mano (no una
   aproximación poligonal), mucho más fiel a la forma de los dedos.
-- PoseContourDetector: silueta corporal EXACTA obtenida por segmentación
+- PoseContourDetector: silueta corporal exacta obtenida por segmentación
   a nivel de píxel (no por unión de puntos dispersos).
 """
 
@@ -19,7 +17,6 @@ from mediapipe.tasks.python import vision
 
 
 class BaseDetector(ABC):
-    """Contrato común mínimo para todos los detectores."""
 
     @abstractmethod
     def detect(self, rgb_frame, timestamp_ms: int):
@@ -30,12 +27,7 @@ class BaseDetector(ABC):
 
 
 class FaceContourDetector(BaseDetector):
-    """
-    Detecta el rostro. Expone dos conjuntos de conexiones:
-    - `contours`: solo los bordes clave (óvalo, cejas, ojos, labios, iris).
-    - `tesselation`: malla completa (~468 puntos triangulados) para máximo
-      nivel de detalle cuando se necesita más precisión visual.
-    """
+
 
     def __init__(self, model_path="models/face_landmarker.task", max_faces=2,
                  min_detection_confidence=0.5, min_tracking_confidence=0.5):
@@ -62,11 +54,6 @@ class FaceContourDetector(BaseDetector):
 
 
 class HandContourDetector(BaseDetector):
-    """
-    Detecta manos y expone el esqueleto anatómico completo (huesos de cada
-    dedo + palma), muchísimo más preciso que una envolvente convexa, que
-    "corta" el espacio entre dedos y pierde la forma real de la mano.
-    """
 
     def __init__(self, model_path="models/hand_landmarker.task", max_hands=2,
                  min_detection_confidence=0.6, min_tracking_confidence=0.6):
@@ -93,12 +80,7 @@ class HandContourDetector(BaseDetector):
 
 
 class PoseContourDetector(BaseDetector):
-    """
-    Detecta la postura corporal Y genera una máscara de segmentación a
-    nivel de píxel. A partir de esa máscara se extrae el contorno REAL
-    del cuerpo con cv2.findContours (en renderer.py), lo cual da una
-    silueta exacta en vez de una aproximación con ~33 puntos dispersos.
-    """
+
 
     def __init__(self, model_path="models/pose_landmarker_lite.task",
                  min_detection_confidence=0.5, min_tracking_confidence=0.5):
@@ -117,12 +99,10 @@ class PoseContourDetector(BaseDetector):
         ]
 
     def detect(self, rgb_frame, timestamp_ms: int):
-        """Devuelve solo landmarks (cumple la interfaz base)."""
         landmarks, _ = self.detect_with_mask(rgb_frame, timestamp_ms)
         return landmarks
 
     def detect_with_mask(self, rgb_frame, timestamp_ms: int):
-        """Devuelve (landmarks, mascara_segmentacion) en una sola pasada."""
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
         result = self._landmarker.detect_for_video(mp_image, timestamp_ms)
         landmarks = result.pose_landmarks or []

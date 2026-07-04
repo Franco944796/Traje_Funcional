@@ -1,6 +1,4 @@
 """
-config.py
----------
 Configuración centralizada de la herramienta. Modifica aquí colores,
 umbrales de confianza y parámetros de cámara sin tocar la lógica.
 """

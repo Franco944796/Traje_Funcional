@@ -1,6 +1,4 @@
 """
-download_models.py
--------------------
 Descarga los modelos oficiales de MediaPipe (API Tasks) necesarios para
 detectar rostro, manos y cuerpo. Ejecutar una sola vez:
 

@@ -139,14 +139,38 @@
     },
     "code_snippets": [
         {
-            "title": "Visión artificial para identificación de contornos",
+            "title": "Módulo de reconocimiento con visión artificial",
             "lang": "python",
-            "file": "assets/code/pwm_control.ino"
-        },
-        {
-            "title": "Script de Cinemática Inversa y Telemetría",
-            "lang": "python",
-            "file": "assets/code/kinematics.py"
+            "files": [
+                {
+                    "name": "capture.py",
+                    "path": "assets/code/contour_vision/capture.py"
+                },
+                {
+                    "name": "config.py",
+                    "path": "assets/code/contour_vision/config.py"
+                },
+                {
+                    "name": "detectors.py",
+                    "path": "assets/code/contour_vision/detectors.py"
+                },
+                {
+                    "name": "download_models.py",
+                    "path": "assets/code/contour_vision/download_models.py"
+                },
+                {
+                    "name": "main.py",
+                    "path": "assets/code/contour_vision/main.py"
+                },
+                {
+                    "name": "renderer.py",
+                    "path": "assets/code/contour_vision/renderer.py"
+                },
+                {
+                    "name": "requirements.txt",
+                    "path": "assets/code/contour_vision/requirements.txt"
+                }
+            ]
         }
     ]
 }

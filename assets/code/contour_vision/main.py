@@ -1,6 +1,4 @@
 """
-main.py
--------
 Orquestador principal. Captura video de la laptop, ejecuta los
 detectores habilitados y dibuja SOLO los contornos sobre un lienzo
 negro (nunca la imagen real de la cámara).
@@ -30,7 +28,6 @@ import renderer
 
 
 def build_detectors():
-    """Crea e inicializa los tres detectores según config.py."""
     face = FaceContourDetector(
         model_path=config.FACE_MODEL_PATH,
         max_faces=config.MAX_FACES,
@@ -52,14 +49,12 @@ def build_detectors():
 
 
 def process_frame(frame, face_detector, hand_detector, pose_detector, flags, timestamp_ms):
-    """Devuelve un canvas negro con únicamente los contornos detectados."""
     height, width = frame.shape[:2]
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     rgb_frame = np.ascontiguousarray(rgb_frame)  # requerido por mp.Image
 
     canvas = np.zeros((height, width, 3), dtype=np.uint8)
 
-    # --- Rostro: contorno base + malla completa opcional ---
     if flags["face"]:
         for landmarks in face_detector.detect(rgb_frame, timestamp_ms):
             if flags["face_detail"]:
@@ -72,7 +67,6 @@ def process_frame(frame, face_detector, hand_detector, pose_detector, flags, tim
                 width, height, config.COLOR_FACE, config.THICKNESS_FACE,
             )
 
-    # --- Manos: esqueleto anatómico + silueta exacta opcional (GrabCut) ---
     if flags["hands"]:
         for landmarks in hand_detector.detect(rgb_frame, timestamp_ms):
             renderer.draw_connections(
@@ -80,8 +74,6 @@ def process_frame(frame, face_detector, hand_detector, pose_detector, flags, tim
                 width, height, config.COLOR_HANDS, config.THICKNESS_HANDS,
             )
             if flags["hand_silhouette"]:
-                # Se usa 'frame' (BGR original) porque GrabCut necesita
-                # información real de color/textura, no solo landmarks.
                 renderer.draw_hand_silhouette(
                     canvas, frame, landmarks, width, height,
                     config.COLOR_HAND_SILHOUETTE, config.THICKNESS_HAND_SILHOUETTE,
@@ -89,7 +81,6 @@ def process_frame(frame, face_detector, hand_detector, pose_detector, flags, tim
                     config.HAND_SILHOUETTE_SMOOTHING,
                 )
 
-    # --- Cuerpo: silueta exacta (segmentación) + esqueleto opcional ---
     if flags["pose"]:
         pose_landmarks, mask = pose_detector.detect_with_mask(rgb_frame, timestamp_ms)
         renderer.draw_segmentation_contour(
@@ -107,7 +98,6 @@ def process_frame(frame, face_detector, hand_detector, pose_detector, flags, tim
 
 
 def draw_hud(canvas, fps, flags):
-    """Overlay de estado: FPS y qué módulos están activos."""
     line1 = (
         f"FPS: {fps:.1f}   "
         f"Rostro:{'ON' if flags['face'] else 'OFF'}"
