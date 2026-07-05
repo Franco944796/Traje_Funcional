@@ -7,8 +7,8 @@
     "subprojects": [
         {
             "id": "sub-1",
-            "name": "Brazo Articulado",
-            "status": "Diseño CAD",
+            "name": "Exoesqueleto de extremidad superior",
+            "status": "Prototipo Físico",
             "status_color": "bg-blue-500",
             "progress": 0,
             "timeline": [
@@ -17,25 +17,11 @@
                     "completed": false
                 },
                 {
-                    "text": "Modelado en SolidWorks",
+                    "text": "Modelado en 3D",
                     "completed": false
                 }
             ],
-            "description": "Módulo de manipulación principal. Utiliza servomotores de alto torque y requiere cálculos cinemáticos inversos."
-        },
-        {
-            "id": "sub-2",
-            "name": "Nombre del próximo subproyecto",
-            "status": "Prototipo Físico",
-            "status_color": "bg-blue-500",
-            "progress": 0,
-            "timeline": [
-                {
-                    "text": "Investigación de Materiales",
-                    "completed": false
-                }
-            ],
-            "description": "Descripción del subproyecto."
+            "description": "En fase de estudio."
         }
     ],
     "pdf_vault": [
@@ -80,12 +66,6 @@
             "file": "assets/pdfs/levitacion_magnetica.pdf",
             "año": "2018",
             "tema": "Física/Mecánica"
-        },
-        {
-            "title": "prox",
-            "file": ".",
-            "año": ".",
-            "tema": "."
         }
     ],
     "media_center": [

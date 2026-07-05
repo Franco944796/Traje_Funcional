@@ -2,6 +2,8 @@ En este archivo se encuentran las fuentes consultadas (en mas de una ocasion cre
 
 1. Google Scholar.
 2. Applied Physics Letters.
+3. Ultralytics.
+4.
 
 
 

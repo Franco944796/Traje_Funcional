@@ -1,0 +1,2 @@
+Importante:
+- Verificar licencia comercial Enterprise de Ultralytics sobre el modelo de vision artificial (en caso de lanzarlo como producto comercial).

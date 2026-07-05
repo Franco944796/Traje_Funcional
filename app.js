@@ -81,9 +81,15 @@ function render_subprojects() {
     `;
 }
 
+// ACTUALIZADO: Los años ahora se ordenan de forma decreciente y los temas alfabéticamente (A-Z)
 function render_pdf() {
-    const temas = [...new Set(vaultData.pdf_vault.map(pdf => pdf.tema).filter(Boolean))];
-    const años = [...new Set(vaultData.pdf_vault.map(pdf => pdf.año).filter(Boolean))];
+    // Extrae únicos, limpia vacíos y ordena alfabéticamente (A-Z)
+    const temas = [...new Set(vaultData.pdf_vault.map(pdf => pdf.tema).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
+
+    // Extrae únicos, limpia vacíos y ordena de forma decreciente (Mayor a Menor)
+    const años = [...new Set(vaultData.pdf_vault.map(pdf => pdf.año).filter(Boolean))]
+        .sort((a, b) => b - a);
 
     return `
         <div class="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
@@ -194,7 +200,6 @@ function render_brainstorm() {
     `;
 }
 
-// OPTIMIZADO: Agregado botón de colapsado y máscara 'hidden' por defecto para evitar scrolls masivos
 function render_code() {
     return `
         <h2 class="text-xl font-bold text-emerald-400 mb-4">// CODE SNIPPETS (FIRMWARE / AUTOMATIZACIÓN)</h2>
@@ -241,7 +246,6 @@ function render_code() {
     `;
 }
 
-// Carga asíncrona anidada (funciona en segundo plano aunque los contenedores estén en 'hidden')
 async function loadCodeFilesContents() {
     for (let s = 0; s < vaultData.code_snippets.length; s++) {
         const block = vaultData.code_snippets[s];
@@ -305,11 +309,7 @@ function openLightbox(url) {
     lb.classList.remove('hidden');
 }
 
-
-// ==========================================
-// NUEVA LOGICA: INTERRUPTOR DE ACORDEÓN
-// ==========================================
-
+// INTERRUPTOR DE ACORDEÓN
 function toggleBlockFiles(index, button) {
     const container = document.getElementById(`files-container-${index}`);
     if (!container) return;
@@ -325,11 +325,7 @@ function toggleBlockFiles(index, button) {
     }
 }
 
-
-// ==========================================
 // INTERACTIVIDAD DEL WORKSPACE MODAL
-// ==========================================
-
 function openCodeModal(snippetIndex, fileIndex, fileName, lang) {
     const sourceCode = document.getElementById(`code-block-${snippetIndex}-${fileIndex}`);
     if (!sourceCode) return;
