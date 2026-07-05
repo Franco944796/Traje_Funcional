@@ -1,19 +1,3 @@
-"""
-Contorno corporal en tiempo real con YOLO26 (Ultralytics).
-
-Usa la cámara de la laptop, detecta personas con el modelo de
-segmentación YOLO26 y dibuja SOLO su contorno (silueta exacta a nivel
-de píxel) sobre fondo negro. No usa ningún otro modelo ni librería de
-visión artificial.
-
-Instalación:
-    pip install ultralytics opencv-python
-
-Uso:
-    python main.py
-    (q para salir)
-"""
-
 import cv2
 import numpy as np
 from ultralytics import YOLO
@@ -27,7 +11,6 @@ CONTOUR_THICKNESS = 2
 
 
 def draw_person_contours(canvas: np.ndarray, masks: np.ndarray, width: int, height: int) -> None:
-    """Extrae y dibuja el contorno de cada máscara de persona detectada."""
     for mask in masks:
         binary = (mask > 0.5).astype(np.uint8) * 255
         if binary.shape[:2] != (height, width):
