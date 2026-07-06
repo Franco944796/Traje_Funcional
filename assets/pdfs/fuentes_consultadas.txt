@@ -3,7 +3,8 @@ En este archivo se encuentran las fuentes consultadas (en mas de una ocasion cre
 1. Google Scholar.
 2. Applied Physics Letters.
 3. Ultralytics.
-4.
+4. Recursoscientificos.
+5.
 
 
 
@@ -17,7 +18,6 @@ Fuentes a utilizar de la clear web (aun no consultadas):
 - Web of Science (Base de datos multidisciplinar)
 - JSTOR (Base de datos multidisciplinar)
 - ProQuest (Base de datos multidisciplinar)
-- Recursoscientificos
 
 - PubMed (Repositorio y bases específicas)
 - Scielo (Repositorio y bases específicas)

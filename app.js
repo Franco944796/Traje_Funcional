@@ -177,7 +177,7 @@ function render_media() {
 
 function render_brainstorm() {
     return `
-        <h2 class="text-xl font-bold text-emerald-400 mb-4">// BITÁCORA DE IDEAS E IMPLEMENTACIONES</h2>
+        <h2 class="text-xl font-bold text-emerald-400 mb-4">// IDEAS E IMPLEMENTACIONES</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-lg">
                 <h3 class="text-sm font-bold text-slate-400 mb-4">> Ideas </h3>
@@ -202,7 +202,7 @@ function render_brainstorm() {
 
 function render_code() {
     return `
-        <h2 class="text-xl font-bold text-emerald-400 mb-4">// CODE SNIPPETS (FIRMWARE / AUTOMATIZACIÓN)</h2>
+        <h2 class="text-xl font-bold text-emerald-400 mb-4">// CÓDIGOS</h2>
         <div class="space-y-6">
             ${vaultData.code_snippets.map((block, snippetIndex) => `
                 <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
