@@ -21,9 +21,50 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
         `;
     }
+
+    // Inicializar el botón hamburguesa
+    const menuToggle = document.getElementById('menu-toggle');
+    if (menuToggle) {
+        menuToggle.addEventListener('click', toggleMobileMenu);
+    }
 });
 
+// =============================================
+// MENÚ MOBILE
+// =============================================
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        iconOpen.classList.add('hidden');
+        iconClose.classList.remove('hidden');
+    } else {
+        menu.classList.add('hidden');
+        iconOpen.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+    }
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+
+    if (menu) menu.classList.add('hidden');
+    if (iconOpen) iconOpen.classList.remove('hidden');
+    if (iconClose) iconClose.classList.add('hidden');
+}
+
+// =============================================
 // 2. FUNCIONES DE RENDERIZADO DE MÓDULOS
+// =============================================
+
 function render_hub() {
     return `
         <div class="bg-slate-900 border border-slate-800 p-6 rounded-lg">
@@ -280,14 +321,17 @@ function switchTab(tabId) {
 
     const container = document.getElementById('content-area');
 
+    // Actualizar estado activo en TODOS los nav-btn (sidebar + mobile)
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('bg-slate-800', 'text-emerald-400');
+        btn.classList.remove('bg-slate-800', 'text-emerald-400', 'font-medium');
         btn.classList.add('hover:bg-slate-800', 'hover:text-slate-200');
     });
 
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.add('bg-slate-800', 'text-emerald-400');
-    }
+    // Marcar activo todos los botones que correspondan al tab seleccionado
+    document.querySelectorAll(`.nav-btn[onclick*="'${tabId}'"]`).forEach(btn => {
+        btn.classList.add('bg-slate-800', 'text-emerald-400', 'font-medium');
+        btn.classList.remove('hover:bg-slate-800', 'hover:text-slate-200');
+    });
 
     switch (tabId) {
         case 'hub': container.innerHTML = render_hub(); break;

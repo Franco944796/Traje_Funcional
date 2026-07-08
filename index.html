@@ -22,9 +22,12 @@
     <script src="app.js" defer></script>
 </head>
 
-<body class="flex h-full overflow-hidden">
+<!-- CAMBIO: flex-col en mobile, flex-row en desktop -->
 
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+<body class="flex flex-col md:flex-row h-full overflow-hidden">
+
+    <!-- SIDEBAR: solo visible en desktop -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex-col justify-between hidden md:flex">
         <div class="p-6">
             <div class="flex items-center space-x-2 text-emerald-400 font-bold tracking-wider text-sm mb-8">
                 <span class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
@@ -56,19 +59,62 @@
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-950">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-950 min-h-0">
+
+        <!-- HEADER -->
         <header
-            class="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-slate-900/50 backdrop-blur">
-            <h1 id="vault-title" class="text-lg font-bold tracking-tight text-slate-200">Sincronizando Bóveda...</h1>
-            <div class="text-xs px-3 py-1 bg-slate-800 border border-slate-700 rounded text-slate-400">ESTADO:
-                INVESTIGACIÓN</div>
+            class="h-16 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 bg-slate-900/50 backdrop-blur shrink-0">
+
+            <!-- Botón hamburguesa: solo visible en mobile -->
+            <button id="menu-toggle" class="md:hidden text-slate-400 hover:text-emerald-400 transition p-1">
+                <svg id="icon-open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <h1 id="vault-title"
+                class="text-base md:text-lg font-bold tracking-tight text-slate-200 truncate mx-2 md:mx-0">Sincronizando
+                Bóveda...</h1>
+            <div class="text-xs px-2 md:px-3 py-1 bg-slate-800 border border-slate-700 rounded text-slate-400 shrink-0">
+                ESTADO: INVESTIGACIÓN</div>
         </header>
 
-        <div id="content-area" class="p-8 max-w-6xl w-full mx-auto space-y-8">
+        <!-- MENÚ MOBILE DESPLEGABLE: solo visible en mobile cuando se abre -->
+        <nav id="mobile-menu"
+            class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 py-3 space-y-1 shrink-0">
+            <button onclick="switchTab('hub'); closeMobileMenu()"
+                class="nav-btn w-full text-left px-4 py-2 rounded bg-slate-800 text-emerald-400 font-medium">01. Nodo
+                principal</button>
+            <button onclick="switchTab('subprojects'); closeMobileMenu()"
+                class="nav-btn w-full text-left px-4 py-2 rounded hover:bg-slate-800 hover:text-slate-200 transition">02.
+                Componentes</button>
+            <button onclick="switchTab('pdf'); closeMobileMenu()"
+                class="nav-btn w-full text-left px-4 py-2 rounded hover:bg-slate-800 hover:text-slate-200 transition">03.
+                Documentación</button>
+            <button onclick="switchTab('media'); closeMobileMenu()"
+                class="nav-btn w-full text-left px-4 py-2 rounded hover:bg-slate-800 hover:text-slate-200 transition">04.
+                Planos, Bocetos e Imágenes</button>
+            <button onclick="switchTab('brainstorm'); closeMobileMenu()"
+                class="nav-btn w-full text-left px-4 py-2 rounded hover:bg-slate-800 hover:text-slate-200 transition">05.
+                Ideas e Implementaciones</button>
+            <button onclick="switchTab('code'); closeMobileMenu()"
+                class="nav-btn w-full text-left px-4 py-2 rounded hover:bg-slate-800 hover:text-slate-200 transition">06.
+                Códigos</button>
+        </nav>
+
+        <!-- ÁREA DE CONTENIDO -->
+        <div id="content-area" class="p-4 md:p-8 max-w-6xl w-full mx-auto space-y-8">
             <div class="text-sm text-slate-500 animate-pulse">Iniciando lectura de registros locales...</div>
         </div>
     </main>
 
+    <!-- LIGHTBOX DE IMÁGENES -->
     <div id="lightbox" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4"
         onclick="this.classList.add('hidden')">
         <img id="lightbox-img" src="" class="max-w-full max-h-full rounded shadow-2xl border border-slate-700">
