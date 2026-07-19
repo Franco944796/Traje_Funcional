@@ -1,6 +1,9 @@
 // Variable global para almacenar los datos del proyecto una vez cargados
 let vaultData = null;
 
+// Control de sub-pestañas internas dentro de la sección de Documentación
+let activeDocSubTab = 'pdf'; // Valores posibles: 'pdf' o 'video'
+
 // 1. CARGA ASÍNCRONA DE DATOS (fetch)
 document.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -122,19 +125,53 @@ function render_subprojects() {
     `;
 }
 
-// ACTUALIZADO: Los años ahora se ordenan de forma decreciente y los temas alfabéticamente (A-Z)
-function render_pdf() {
-    // Extrae únicos, limpia vacíos y ordena alfabéticamente (A-Z)
+// CONTROLADOR DE SECCIÓN
+function render_documentation() {
+    const isPdfActive = activeDocSubTab === 'pdf';
+
+    // Sub-navegador local estilizado
+    const subNavigation = `
+        <div class="flex space-x-2 border-b border-slate-800 mb-6 pb-px">
+            <button onclick="switchDocSubTab('pdf')"
+                class="px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 transition duration-200 cursor-pointer ${isPdfActive
+            ? 'border-emerald-500 text-emerald-400 font-bold'
+            : 'border-transparent text-slate-500 hover:text-slate-300'
+        }">
+                📄 Documentos PDFs
+            </button>
+            <button onclick="switchDocSubTab('video')"
+                class="px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 transition duration-200 cursor-pointer ${!isPdfActive
+            ? 'border-emerald-500 text-emerald-400 font-bold'
+            : 'border-transparent text-slate-500 hover:text-slate-300'
+        }">
+                🎥 Videos Relacionados
+            </button>
+        </div>
+    `;
+
+    return subNavigation + (isPdfActive ? render_pdf_content() : render_video_content());
+}
+
+// Reactividad interna para el cambio de sub-pestaña de documentos
+function switchDocSubTab(subTab) {
+    activeDocSubTab = subTab;
+    const container = document.getElementById('content-area');
+    if (container) {
+        container.innerHTML = render_documentation();
+    }
+}
+
+// Vista de PDFs
+function render_pdf_content() {
     const temas = [...new Set(vaultData.pdf_vault.map(pdf => pdf.tema).filter(Boolean))]
         .sort((a, b) => a.localeCompare(b));
 
-    // Extrae únicos, limpia vacíos y ordena de forma decreciente (Mayor a Menor)
     const años = [...new Set(vaultData.pdf_vault.map(pdf => pdf.año).filter(Boolean))]
         .sort((a, b) => b - a);
 
     return `
         <div class="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 class="text-xl font-bold text-emerald-400">// BÓVEDA DE DOCUMENTACIÓN</h2>
+            <h2 class="text-xl font-bold text-emerald-400">// BÓVEDA DE DOCUMENTACIÓN (PDFs)</h2>
 
             <div class="flex gap-2">
                 <select id="filter-tema" onchange="applyPdfFilters()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded p-2 focus:border-emerald-500 focus:outline-none cursor-pointer">
@@ -192,6 +229,98 @@ function applyPdfFilters() {
                 <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${pdf.año}</span></td>
                 <td class="p-4 text-slate-400">${pdf.tema}</td>
                 <td class="p-4"><a href="${pdf.file}" target="_blank" class="text-emerald-400 hover:underline">Abrir PDF</a></td>
+            </tr>
+        `).join('');
+    }
+}
+
+// Vista de Videos
+function render_video_content() {
+    const videos = vaultData.video_vault || [];
+
+    const temas = [...new Set(videos.map(v => v.tema).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
+
+    const años = [...new Set(videos.map(v => v.año).filter(Boolean))]
+        .sort((a, b) => b - a);
+
+    return `
+        <div class="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 class="text-xl font-bold text-emerald-400">// REGISTRO AUDIOVISUAL</h2>
+
+            <div class="flex gap-2">
+                <select id="filter-video-tema" onchange="applyVideoFilters()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded p-2 focus:border-emerald-500 focus:outline-none cursor-pointer">
+                    <option value="">Todos los temas</option>
+                    ${temas.map(t => `<option value="${t}">${t}</option>`).join('')}
+                </select>
+
+                <select id="filter-video-año" onchange="applyVideoFilters()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded p-2 focus:border-emerald-500 focus:outline-none cursor-pointer">
+                    <option value="">Todos los años</option>
+                    ${años.map(a => `<option value="${a}">${a}</option>`).join('')}
+                </select>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-lg">
+            <table class="w-full text-left text-sm text-slate-300">
+                <thead class="text-xs uppercase bg-slate-800 text-slate-400 border-b border-slate-700">
+                    <tr>
+                        <th class="p-4">Recurso de Video</th>
+                        <th class="p-4">Año</th>
+                        <th class="p-4">Tema</th>
+                        <th class="p-4">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="video-tbody">
+                    ${videos.map(video => `
+                        <tr class="border-b border-slate-800 hover:bg-slate-800/30">
+                            <td class="p-4 font-medium flex items-center space-x-2">
+                                <span class="text-emerald-400">▶</span>
+                                <span>${video.title}</span>
+                            </td>
+                            <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${video.año}</span></td>
+                            <td class="p-4 text-slate-400">${video.tema}</td>
+                            <td class="p-4">
+                                <a href="${video.url}" target="_blank" class="text-emerald-400 hover:underline flex items-center space-x-1">
+                                    <span>Ver Video</span>
+                                    <span class="text-[10px]">↗</span>
+                                </a>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function applyVideoFilters() {
+    const videos = vaultData.video_vault || [];
+    const temaSelected = document.getElementById('filter-video-tema').value;
+    const añoSelected = document.getElementById('filter-video-año').value;
+
+    const filtered = videos.filter(video => {
+        const matchTema = temaSelected === "" || video.tema === temaSelected;
+        const matchAño = añoSelected === "" || video.año === añoSelected;
+        return matchTema && matchAño;
+    });
+
+    const tbody = document.getElementById('video-tbody');
+    if (tbody) {
+        tbody.innerHTML = filtered.map(video => `
+            <tr class="border-b border-slate-800 hover:bg-slate-800/30">
+                <td class="p-4 font-medium flex items-center space-x-2">
+                    <span class="text-emerald-400">▶</span>
+                    <span>${video.title}</span>
+                </td>
+                <td class="p-4"><span class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-400">${video.año}</span></td>
+                <td class="p-4 text-slate-400">${video.tema}</td>
+                <td class="p-4">
+                    <a href="${video.url}" target="_blank" class="text-emerald-400 hover:underline flex items-center space-x-1">
+                        <span>Ver Video</span>
+                        <span class="text-[10px]">↗</span>
+                    </a>
+                </td>
             </tr>
         `).join('');
     }
@@ -336,7 +465,7 @@ function switchTab(tabId) {
     switch (tabId) {
         case 'hub': container.innerHTML = render_hub(); break;
         case 'subprojects': container.innerHTML = render_subprojects(); break;
-        case 'pdf': container.innerHTML = render_pdf(); break;
+        case 'pdf': container.innerHTML = render_documentation(); break; // CAMBIADO: Apunta al despachador de documentación
         case 'media': container.innerHTML = render_media(); break;
         case 'brainstorm': container.innerHTML = render_brainstorm(); break;
         case 'code':

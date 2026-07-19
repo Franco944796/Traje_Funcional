@@ -66,6 +66,38 @@
             "file": "assets/pdfs/levitacion_magnetica.pdf",
             "año": "2018",
             "tema": "Física/Mecánica"
+        },
+        {
+            "title": "Estudio de la propulsión iónica",
+            "file": "https://www.osti.gov/etdeweb/servlets/purl/21049613",
+            "año": "1972",
+            "tema": "Física/Mecánica"
+        },
+        {
+            "title": "Modelo 0-Dimensional para un propulsor iónico",
+            "file": "https://repositorio.uniandes.edu.co/server/api/core/bitstreams/6382ee7f-88f8-4e7f-a8ce-ff8be58566e7/content",
+            "año": "2024",
+            "tema": "Física/Mecánica"
+        },
+        {
+            "title": "Propulsor de Efecto Hall (diseño conceptual)",
+            "file": "https://www.researchgate.net/profile/Gino-Moretta/publication/391320324_Diseno_Conceptual_de_un_Propulsor_de_Efecto_Hall_para_el_CubeSat_Academico_NANO_7030/links/68124501ded43315573fa484/Diseno-Conceptual-de-un-Propulsor-de-Efecto-Hall-para-el-CubeSat-Academico-NANO-70-30.pdf",
+            "año": "2025",
+            "tema": "Física/Mecánica"
+        }
+    ],
+    "video_vault": [
+        {
+            "title": "Levitación cuántica",
+            "url": "https://youtu.be/LAUXr7x0DeY?si=jhieq9aeaBDYyqVd",
+            "año": "2022",
+            "tema": "Física Cuántica"
+        },
+        {
+            "title": "Propulsor de iones",
+            "url": "https://youtu.be/SI9GSl59d-k?si=v7D73RGih1F77qxi",
+            "año": "2021",
+            "tema": "Física/Mecánica"
         }
     ],
     "media_center": [
