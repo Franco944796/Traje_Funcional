@@ -1,0 +1,6 @@
+1. moverte a "Traje_Funcional/assets/code/contour_vision/"
+2. Ejecutar "source .venv/bin/activate"
+2.1 En caso de no poder ejecutar el paso 2, borrar la carpeta .venv y ejecutar "python -m venv .venv"...Luego reintentar paso 2.
+3. Para ejecutar el script (estando en la carpeta del paso 1) ejecutar "python main.py".
+4. Para cerrar el script apretar "q".
+5. Para salir del entorno virtual al terminar ejecutar "desactivate".
